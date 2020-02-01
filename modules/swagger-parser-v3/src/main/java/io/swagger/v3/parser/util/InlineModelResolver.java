@@ -73,6 +73,19 @@ public class InlineModelResolver {
                                     MediaType mediaType = content.get(key);
                                     if(mediaType.getSchema() != null) {
                                         Schema model = mediaType.getSchema();
+
+                                        // Look into "data" wrapper
+                                        if (model instanceof ObjectSchema) {
+                                            ObjectSchema op = (ObjectSchema) model;
+                                            if (op.getProperties() != null && op.getProperties().containsKey("data")) {
+                                                Schema underWrapper = op.getProperties().get("data");
+                                                if (underWrapper != null) {
+                                                    mediaType.setSchema(underWrapper);
+                                                    model = underWrapper;
+                                                }
+                                            }
+                                        }
+
                                         if (model.getProperties() != null && model.getProperties().size() > 0) {
                                             flattenProperties(model.getProperties(), pathname);
                                             String modelName = resolveModelName(model.getTitle(), "body");
@@ -160,6 +173,18 @@ public class InlineModelResolver {
                                         MediaType media = content.get(name);
                                         if (media.getSchema() != null) {
                                             Schema mediaSchema = media.getSchema();
+
+                                            // Look into "data" wrapper
+                                            if (mediaSchema instanceof ObjectSchema) {
+                                                ObjectSchema op = (ObjectSchema) mediaSchema;
+                                                if (op.getProperties() != null && op.getProperties().containsKey("data")) {
+                                                    Schema underWrapper = op.getProperties().get("data");
+                                                    if (underWrapper != null) {
+                                                        media.setSchema(underWrapper);
+                                                        mediaSchema = underWrapper;
+                                                    }
+                                                }
+                                            }
                                             if (isObjectSchema(mediaSchema)) {
                                                 if (mediaSchema.getProperties() != null && mediaSchema.getProperties().size() > 0) {
                                                     String modelName = resolveModelName(mediaSchema.getTitle(), "inline_response_" + key);
@@ -260,7 +285,7 @@ public class InlineModelResolver {
                     ComposedSchema composedSchema = (ComposedSchema) model;
                     List<Schema> list = null;
                     if (composedSchema.getAllOf() != null) {
-                      list  = composedSchema.getAllOf();
+                        list  = composedSchema.getAllOf();
                     }else if (composedSchema.getAnyOf() != null) {
                         list  = composedSchema.getAnyOf();
                     }else if (composedSchema.getOneOf() != null) {
