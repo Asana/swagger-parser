@@ -7,7 +7,7 @@ All this fork does is put:
 // Look into "data" wrapper
 if (model instanceof ObjectSchema) {
     ObjectSchema op = (ObjectSchema) model;
-    if (op.getProperties() != null && op.getProperties().containsKey("data")) {
+    if (op.getProperties() != null && op.getProperties().containsKey("data") && !op.getProperties().containsKey("template")) {
         Schema underWrapper = op.getProperties().get("data");
         if (underWrapper != null) {
             mediaType.setSchema(underWrapper);

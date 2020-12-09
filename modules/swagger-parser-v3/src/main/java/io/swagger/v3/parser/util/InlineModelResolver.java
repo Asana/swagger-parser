@@ -77,7 +77,7 @@ public class InlineModelResolver {
                                         // Look into "data" wrapper
                                         if (model instanceof ObjectSchema) {
                                             ObjectSchema op = (ObjectSchema) model;
-                                            if (op.getProperties() != null && op.getProperties().containsKey("data")) {
+                                            if (op.getProperties() != null && op.getProperties().containsKey("data") && !op.getProperties().containsKey("template")) {
                                                 Schema underWrapper = op.getProperties().get("data");
                                                 if (underWrapper != null) {
                                                     mediaType.setSchema(underWrapper);
@@ -177,7 +177,7 @@ public class InlineModelResolver {
                                             // Look into "data" wrapper
                                             if (mediaSchema instanceof ObjectSchema) {
                                                 ObjectSchema op = (ObjectSchema) mediaSchema;
-                                                if (op.getProperties() != null && op.getProperties().containsKey("data")) {
+                                                if (op.getProperties() != null && op.getProperties().containsKey("data") && !op.getProperties().containsKey("template")) {
                                                     Schema underWrapper = op.getProperties().get("data");
                                                     if (underWrapper != null) {
                                                         media.setSchema(underWrapper);
